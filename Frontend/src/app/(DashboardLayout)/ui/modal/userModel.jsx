@@ -30,33 +30,23 @@ const UsersModel = ({
   } = useForm();
 
   const [loading, setLoading] = useState(false);
-  const [moduleList, setModuleList] = useState([]);
-  const [adminModuleList, setAdminModuleList] = useState([]);
-  const [user, setUser] = useState("");
-  const [userList, setUserList] = useState({});
-  const selectedValue = watch("role");
+  const [filePreview, setFilePreview] = useState(null);
+  const [fileName, setFileName] = useState(null);
   const getRole = [
-    {
-      id: "ADMIN",
-      name: "Admin",
-    },
     {
       id: "NORMAL",
       name: "Normal",
     },
   ];
 
-
-
   useEffect(() => {
-    console.log('userData model :>> ', userData);
     if (userData) {
       setTimeout(() => {
         setValue("name", userData?.name);
         setValue("cell_number", userData?.cell_number);
         setValue("email", userData?.email);
-        setValue("role_id",String(userData?.role_id));
-        setValue("profile_pic",userData?.profile_pic);
+        setValue("role_id", String(userData?.role_id));
+        setValue("profile_pic", userData?.profile_pic);
       }, 100);
     }
   }, [userData]);
@@ -84,22 +74,29 @@ const UsersModel = ({
         name: inviteData.name,
         email: inviteData.email,
         role_id: inviteData.role_id,
-        // profile_pic: inviteData.profile_pic,
-        // password: inviteData.password,
-        // confirm_password: inviteData.password2,
+        profile_pic: inviteData.profile_pic,
       };
 
+      console.log("fileName", fileName);
+      const formData = new FormData();
+      formData.append("id", userData.id);
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("cell_number", data.cell_number);
+      formData.append("password", data.password);
+      formData.append("role_id", data.role_id);
+
+      if (fileName) {
+        formData.append("profile_pic", fileName); // file
+      }
       axios
-        .put(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user`,
-          updateData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${userToken}`,
-            },
-          }
-        )
+        .put(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user`, formData, {
+          headers: {
+            // "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${userToken}`,
+          },
+        })
         .then((res) => {
           if (res.data.status_code === 200) {
             setLoading(false);
@@ -119,21 +116,23 @@ const UsersModel = ({
           window.location.href = "/";
         });
     } else {
-      const userObj = {
-        cell_number: inviteData.cell_number,
-        name: inviteData.name,
-        email: inviteData.email,
-        role_id: inviteData.role,
-        // profile_pic: inviteData.profile_pic[0],
-        password: inviteData.password,
-        confirm_password: inviteData.password2,
-      };
+      console.log("fileName", fileName);
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("cell_number", data.cell_number);
+      formData.append("password", data.password);
+      formData.append("role_id", data.role_id);
 
+      if (fileName) {
+        formData.append("profile_pic", fileName); // file
+      }
       // return false;
       axios
-        .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user`, userObj, {
+        .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user`, formData, {
           headers: {
-            "Content-Type": "application/json",
+            // "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${userToken}`,
           },
         })
@@ -156,6 +155,12 @@ const UsersModel = ({
           } else if (resError.password) {
             setLoading(false);
             notify(`${resError.password[0]}`, "error");
+          } else if (resError.profile_pic) {
+            setLoading(false);
+            notify(`${resError.profile_pic[0]}`, "error");
+          } else if (resError.cell_number) {
+            setLoading(false);
+            notify(`${resError.cell_number[0]}`, "error");
           } else {
             setLoading(false);
             notify(`${error.response.data.msg}`, "error");
@@ -164,9 +169,15 @@ const UsersModel = ({
     }
   };
 
-  const noSpaces = (value) => {
-    return !/\s/.test(value) || "Spaces are not allowed";
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFilePreview(URL.createObjectURL(file)); // show preview
+      setFileName(file); // store actual file
+      setValue("profile_pic", file.name); // update react-hook-form
+    }
   };
+
   return (
     <>
       <Modal show={open} onHide={handleClose}>
@@ -176,7 +187,11 @@ const UsersModel = ({
             User
           </Modal.Title>
         </Modal.Header>
-        <form action="#" onSubmit={handleSubmit(formSubmit)}>
+        <form
+          action="#"
+          onSubmit={handleSubmit(formSubmit)}
+          encType="multipart/form-data"
+        >
           <Modal.Body>
             <div className="profile-tab row">
               <div className="col-md-12 col-12">
@@ -206,7 +221,7 @@ const UsersModel = ({
                       CellNumber is required
                     </small>
                   )}
-                </div>                  
+                </div>
                 <div className="mb-3">
                   <label htmlFor="name" className="form-label">
                     Name
@@ -224,9 +239,7 @@ const UsersModel = ({
                     })}
                   />
                   {errors.name?.message && (
-                    <small className="text-danger">
-                      {errors.name.message}
-                    </small>
+                    <small className="text-danger">{errors.name.message}</small>
                   )}
                 </div>
                 <div className="mb-3">
@@ -305,12 +318,12 @@ const UsersModel = ({
                         User Role
                       </label>
                       <select
-                        name="role"
-                        id="role"
+                        name="role_id"
+                        id="role_id"
                         className={`form-control ${
                           errors.role ? "is-invalid" : ""
                         }`}
-                        {...register("role", {
+                        {...register("role_id", {
                           required: "role is required",
                         })}
                         placeholder="Selected Role"
@@ -325,15 +338,15 @@ const UsersModel = ({
                             );
                           })}
                       </select>
-                      {errors.role?.message && (
+                      {errors.role_id?.message && (
                         <small className="text-danger">
-                          {errors.role.message}
+                          {errors.role_id.message}
                         </small>
                       )}
                     </div>
                   </>
                 )}
-                
+
                 {userData && Object.keys(userData).length === 0 && (
                   <>
                     <div className="mb-3">
@@ -387,16 +400,9 @@ const UsersModel = ({
                   </>
                 )}
 
-                
-                {userData && Object.keys(userData).length > 0 ? (
-                  <>
-                    <img src={userData?.profile_pic} className="rounded" width={50} height={50}/>
-                  </>
-                ) : (
-                  <>
-                  <div className="mb-3">
-                  <label htmlFor="profile_pic" className="form-label">
-                    Upload Pic
+                <div className="mb-3">
+                  <label htmlFor="Password" className="form-label">
+                    Profile Pic
                   </label>
                   <input
                     className={`form-control ${
@@ -405,19 +411,23 @@ const UsersModel = ({
                     type="file"
                     name="profile_pic"
                     id="profile_pic"
-                    placeholder="Enter Name"
-                    {...register("profile_pic", {
-                      required: "Profile is required",
-                    })}
+                    onChange={handleFileChange}
                   />
+                  {filePreview && (
+                    <img
+                      src={filePreview}
+                      alt="Preview"
+                      className="mt-2 rounded"
+                      width={50}
+                      height={50}
+                    />
+                  )}
                   {errors.profile_pic?.message && (
                     <small className="text-danger">
                       {errors.profile_pic.message}
                     </small>
                   )}
                 </div>
-                  </>
-                )}
               </div>
             </div>
           </Modal.Body>

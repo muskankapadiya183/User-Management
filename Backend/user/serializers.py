@@ -6,41 +6,29 @@ from .models import AccessToken
 from datetime import datetime
 import uuid
 import time
+import re
 
 class ProfileSerializer(serializers.ModelSerializer):
+    profile_pic = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = User
-        fields = (
-            "uid",
-            "profile_pic",
-            "name",
-            "cell_number",
-            "password",
-            "email",
-            "role_id"
-        )
+        fields = ("uid", "profile_pic", "name", "cell_number", "password", "email", "role_id")
     
     def create(self, validated_data):
-        # Hash the password using bcrypt before saving the user
         password = validated_data.pop('password', None)
         if password:
-            hashed_password = self.hash_password(password)
-            validated_data['password'] = hashed_password
+            validated_data['password'] = self.hash_password(password)
         user = super().create(validated_data)
         return user
 
-    
     def hash_password(self, password):
-        """
-        Hash the password using bcrypt.
-        :param password: The plain password to hash.
-        :return: The hashed password.
-        """
-        # bcrypt needs a salt, so we generate one
-        salt = bcrypt.gensalt(rounds=12)  # rounds=12 is the default cost factor
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-        return hashed_password.decode('utf-8')  # return the hashed password as a string
-    
+        if isinstance(password, bytes):
+            password = password.decode('utf-8')
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+        return hashed.decode('utf-8')
+
 class ProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -89,7 +77,7 @@ class LoginSerializer(serializers.Serializer):
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             token_str = str(access_token)
-            ttl = int(time.time()) + 240
+            ttl = int(time.time()) + 3600
             # Store in AccessToken table
             AccessToken.objects.create(
                 token=token_str,
@@ -110,49 +98,3 @@ class LoginSerializer(serializers.Serializer):
             return validation
         except:
             raise serializers.ValidationError("Invalid ")
-
-    # class Meta:
-    #     model = User
-    #     fields = ["cell_number", "password"]
-   
-    # def validate_email(self, value):
-    #     try:
-    #         User.objects.get(email__iexact=value)
-    #     except User.DoesNotExist:
-    #         raise serializers.ValidationError(
-    #             _("This account doesn't exist. Please create a new account.")
-    #         )
-    #     return value
-
-    # def validate(self, data):
-    #     cell_number = data['cell_number']
-    #     user = User.objects.get(cell_number=cell_number, deleted_at__isnull=True)
-    #     if user is None:
-    #         raise serializers.ValidationError("Invalid login credentials")
-        
-    #     if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
-    #         raise serializers.ValidationError("Invalid cell number or password")
-    #     try: 
-    #         user_obj = User.objects.get(cell_number=cell_number)
-    #         refresh = RefreshToken.for_user(user)
-    #         refresh_token = str(refresh)
-    #         access_token = str(refresh.access_token)
-    #         ttl = 30000 
-    #         # Store in AccessToken table
-    #         AccessToken.objects.create(
-    #             token=access_token,
-    #             ttl=ttl,
-    #             userId=user,
-    #             created=datetime.now()
-    #         )
-    #         validation = {
-    #             'access': access_token,
-    #             'email': user.email,
-    #             'role_id': user.role_id,
-    #             'name': user.first_name,
-    #             'cell_number': user.cell_number,
-    #             'id': user.id,
-    #         }
-    #         return validation
-    #     except:
-    #         raise serializers.ValidationError("Invalid ")

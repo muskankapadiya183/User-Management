@@ -9,8 +9,7 @@ from rest_framework.response import Response
 from .pagination import ProfileListPagination
 from .permissions import IsAdminUser, IsNormalUser
 from rest_framework.authentication import TokenAuthentication
-
-
+from rest_framework.parsers import MultiPartParser, FormParser
 class CheckAuthenticationView(APIView):
     permission_classes = [IsAdminUser]
 
@@ -20,6 +19,7 @@ class CheckAuthenticationView(APIView):
 # Create your views here.
 class ProfileView(APIView):
     permission_classes = (IsAdminUser,)
+    parser_classes = (MultiPartParser, FormParser)
     response_handler = ResponseHandler()
     serializer_class = ProfileSerializer
     
@@ -31,7 +31,6 @@ class ProfileView(APIView):
         
     def post(self, request):
         try:
-            print("request Data :: ",request.data)
             serializer = self.serializer_class(data=request.data,context={'request': request})
             if serializer.is_valid():
                 serializer.save()
@@ -85,7 +84,7 @@ class ProfileView(APIView):
                 response_dict, status_code = self.response_handler.success(
                     data=serializer.data,
                     error=serializer.errors,
-                    msg="Category has been updated successfully",
+                    msg="User has been updated successfully",
                 )
                 return Response(
                     response_dict,
@@ -101,7 +100,7 @@ class ProfileView(APIView):
                     status=status_code,
                 )
         except Exception as e:
-            print(f"Exception in CategoryView Update: \n {e}")
+            print(f"Exception in ProfileView Update: \n {e}")
             response_dict, status_code = self.response_handler.failure(
                 data=None, error=None, msg="Something went wrong."
             )
@@ -158,11 +157,8 @@ class GetProfileView(APIView):
     
     def get(self, request, pk):
         try:
-            print("Uid :: ",pk)
             user_obj = User.objects.get(id=pk)
             user_serializer = self.serializer_class(user_obj)
-            print("user Obj :::>> ",user_obj)
-            print("user Obj Data :::>> ",user_serializer.data)
             if user_obj:
                 response_dict, status_code = self.response_handler.success(
                     data=user_serializer.data,
@@ -196,7 +192,6 @@ class GetProfileView(APIView):
 
 class ProfileListView(ListAPIView): 
     queryset = User.objects.filter(role_id='NORMAL').order_by('id')
-    # permission_classes = (IsAdminUser)
     permission_classes = [IsAdminUser]
     authentication_classes = [TokenAuthentication]  
     response_handler = ResponseHandler()
@@ -265,7 +260,7 @@ class LoginView(APIView):
             else:
                 response_dict, status_code = self.response_handler.error(
                     data=serializer.errors,
-                    msg="Your username or password is wrong.",
+                    msg="Your cell_number or password is wrong.",
                 )
                 return Response(
                     response_dict,

@@ -6,8 +6,7 @@ import uuid
 
 
 def custom_filename(instance, filename):
-    return '/'.join(['Profile',filename])
-
+    return '/'.join(['images', str(instance.name), filename])
     # return os.path.join('profile/', unique_filename)
 
 class User(models.Model):
@@ -16,9 +15,7 @@ class User(models.Model):
         ('NORMAL', 'Normal'),
     )
     uid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False, verbose_name='Public identifier')
-    # profile_pic = models.FileField(upload_to=custom_filename, null=True, blank=True)
     profile_pic = models.ImageField(upload_to=custom_filename, blank=True, null=True, default='')
-
     name = models.CharField(max_length=100)
     cell_number = models.CharField(max_length=15, unique=True)
     password = models.CharField(max_length=128)  # Stores bcrypt-hashed password

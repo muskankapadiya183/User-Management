@@ -11,11 +11,9 @@ import Excel from "exceljs";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import Swal from "sweetalert2";
-import FilterComponent from "@/app/(DashboardLayout)/components/Filter/page";
 import { Button, Badge } from "reactstrap";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip';
-import ToggleSwitch from "./ToggleSwitch";
 import NotificationContainer from "@/app/(DashboardLayout)/components/Notification/NotificationContainer";
 import notify from "@/app/(DashboardLayout)/components/Notification/notify";
 import UsersModel from "@/app/(DashboardLayout)/ui/modal/userModel";
@@ -273,9 +271,9 @@ const User = () => {
     // Replace this with your logic to map IDs to role names
     switch (roleId) {
       case 'NORMAL':
-        return "Admin";
-      case 'ADMIN':
         return "Normal";
+      case 'ADMIN':
+        return "Admin";
       default:
         return "Guest";
     }
