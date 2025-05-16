@@ -1,0 +1,72 @@
+.font-18 {
+    font-size: 18px;
+  }
+  .setting-page .profile-img label {
+    position: absolute;
+    top: 82%;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 21px;
+  }
+  .setting-page .react-form-wizard .wizard-header {
+    display: none;
+  }
+  .react-form-wizard.md .wizard-navigation .wizard-progress-with-circle {
+    height: 1.2px !important;
+    z-index: 1;
+  }
+  .setting-page .react-form-wizard .wizard-tab-content {
+    text-align: left;
+    padding: 20px 0;
+  }
+  .setting-page .react-form-wizard .wizard-nav-pills > li > a {
+    flex-direction: row !important;
+    color: #fff !important;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    justify-content: center;
+    border-bottom: 2px solid #013f7c;
+  }
+  .setting-page .react-form-wizard .wizard-nav-pills > li > a .stepTitle {
+    margin-top: 0 !important;
+  }
+  .setting-page .react-form-wizard.md .wizard-icon-circle {
+    width: auto;
+    height: auto;
+    border: none;
+    background: transparent;
+  }
+  .setting-page .react-form-wizard .wizard-icon-circle .wizard-icon-container {
+    margin: 0;
+    background: transparent !important;
+  }
+  .react-form-wizard .wizard-nav-pills > li.active > a i.bi {
+    color: #2562e9 !important;
+  }
+  
+  .setting-page .document-tab ul {
+    list-style: disc;
+  }
+  .verify-details {
+    border: 1px solid #004487;
+  }
+  .list-details span {
+    font-size: 16px;
+  }
+  .document-upload label {
+    border: 1px dashed #fff;
+    display: grid;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 6px;
+  }
+  .react-datepicker-wrapper {
+    display: block !important;
+  }
+  

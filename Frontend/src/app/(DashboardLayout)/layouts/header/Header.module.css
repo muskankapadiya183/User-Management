@@ -1,0 +1,37 @@
+.fixedWidthDiv {
+    width: 700px; /* Set your desired fixed width */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .fixedWidthDiv::before {
+    /* content: "USD-ZAR "; */
+    animation: changeBefore 1s linear infinite;
+    display: inline-block;
+  }
+  
+  .fixedWidthDiv::after {
+    /* content: " | BTC/ZAR "; */
+    animation: changeAfter 1s linear infinite;
+    display: inline-block;
+  }
+  
+  @keyframes changeBefore {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+  @keyframes changeAfter {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  

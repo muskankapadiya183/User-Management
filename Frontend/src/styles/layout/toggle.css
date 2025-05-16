@@ -1,0 +1,154 @@
+
+/* toggle switch button */
+
+/**
+ * Checkbox Toggle UI
+ */
+ .toggle-switch {
+    display: inline-block;
+  }
+  input[type="checkbox"].ui-toggle {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    width: auto;
+    height: auto;
+    position: relative;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    margin: 0 4px;
+    background: none;
+    box-shadow: none;
+    display: block;
+  }
+  input[type="checkbox"].ui-toggle:focus {
+    box-shadow: none;
+  }
+  input[type="checkbox"].ui-toggle:after {
+    content: "";
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 14px;
+    text-indent: 14px;
+    color: #fff;
+    width: 30px;
+    height: 14px;
+    display: inline-block;
+    background-color: #a7aaad;
+    border-radius: 70px;
+    box-shadow: 0 0 12px rgb(0 0 0 / 15%) inset;
+  }
+  input[type="checkbox"].ui-toggle:before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    margin: 0;
+    border-radius: 50%;
+    background-color: #ffffff;
+  }
+  input[type="checkbox"].ui-toggle:checked:before {
+    left: 18px;
+    margin: 0;
+    background-color: #ffffff;
+  }
+  input[type="checkbox"].ui-toggle,
+  input[type="checkbox"].ui-toggle:before,
+  input[type="checkbox"].ui-toggle:after,
+  input[type="checkbox"].ui-toggle:checked:before,
+  input[type="checkbox"].ui-toggle:checked:after {
+    transition: ease 0.15s;
+  }
+  
+  input[type="checkbox"].ui-toggle:checked:after {
+    content: "";
+    background-color: #0d6efd;
+    text-indent: -14px;
+  }
+
+
+/* Switch 1 Specific Styles Start */
+.toggle-switch-modal{
+  display: inline-block;
+}
+input[type="checkbox"].ui-toggle-modal {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  width: auto;
+  height: auto;
+  position: relative;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  margin: 0 4px;
+  background: none;
+  box-shadow: none;
+  display: block;
+}
+input[type="checkbox"].ui-toggle-modal:focus {
+  box-shadow: none;
+}
+input[type="checkbox"].ui-toggle-modal:after {
+  content: '';
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 14px;
+  text-indent: 14px;
+  color: #fff;
+  width: 30px;
+  height: 14px;
+  display: inline-block;
+  background-color: #a7aaad;
+  border-radius: 70px;
+  box-shadow: 0 0 12px rgb(0 0 0 / 15%) inset;
+}
+input[type="checkbox"].ui-toggle-modal:before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  display: block;
+  position: absolute;
+  top: 4.5px;
+  left: 3px;
+  margin: 0;
+  border-radius: 50%;
+  background-color: #ffffff;
+}
+input[type="checkbox"].ui-toggle-modal:checked:before {
+  left: 18px;
+  margin: 0;
+  background-color: #ffffff;
+}
+input[type="checkbox"].ui-toggle-modal,
+input[type="checkbox"].ui-toggle-modal:before,
+input[type="checkbox"].ui-toggle-modal:after,
+input[type="checkbox"].ui-toggle-modal:checked:before,
+input[type="checkbox"].ui-toggle-modal:checked:after {
+  transition: ease .15s;
+}
+
+input[type="checkbox"].ui-toggle-modal:checked:after {
+  content: '';
+  background-color: #0d6efd;
+  text-indent: -14px;
+}
+/* Switch 1 Specific Style End */
+
+/* Star Specific Style Start */
+.star-icon {
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.star-icon.filled {
+  color: #007aff; /* Change the color to your desired filled color */
+}
+/* Star Specific Style End */
