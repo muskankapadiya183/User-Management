@@ -1,0 +1,24 @@
+1. Create the Virtualenv:
+    - python -m venv venAuth
+
+2. Install Dependencies: Save requirements.txt and run:
+    - pip install -r requirements.txt
+
+3. Configure MySQL:
+    - Create the user_management database in MySQL.
+    - Create a .env file:
+        DB_NAME=user_management
+        DB_USER=your-mysql-username
+        DB_PASSWORD=your-mysql-password
+        DB_HOST=localhost
+        DB_PORT=3306
+
+4. Apply Migrations:
+    - python manage.py makemigrations
+    - python manage.py migrate
+
+5. Create a Superuser:
+    - python manage.py createsuperuser
+
+6. Run the Server:
+    - python manage.py runserver
